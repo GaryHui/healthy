@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>家庭 AI 健康医生</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="rail" aria-label="应用导航">
+        <div class="brand-mark">
+          <span>AI</span>
+        </div>
+        <nav>
+          <a href="#today" class="active">今日</a>
+          <a href="#record">记录</a>
+          <a href="#plan">营养</a>
+          <a href="#family">照护</a>
+        </nav>
+      </aside>
+
+      <div class="main-shell">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">YS-916D 数据入口 · 家庭医生与营养师</p>
+            <h1>家庭 AI 健康医生</h1>
+          </div>
+          <div class="device-pill">
+            <span class="pulse-dot"></span>
+            设备在线 · 今日已同步
+          </div>
+        </header>
+
+        <main>
+          <section id="today" class="today-grid">
+            <article class="hero-card">
+              <div class="hero-copy">
+                <p class="eyebrow">今日判断</p>
+                <h2 id="riskTitle">今天先稳住节奏</h2>
+                <p id="aiNarrative" class="hero-text">
+                  AI 正在根据血压、血糖、尿酸、血酮的长期记录生成今日建议。
+                </p>
+              </div>
+
+              <div class="health-score" id="healthScore">
+                <span>健康分</span>
+                <strong>82</strong>
+                <small id="riskBadge">需观察</small>
+              </div>
+            </article>
+
+            <article class="device-card">
+              <div class="device-visual">
+                <img src="./assets/ys-916d-device.png" alt="YS-916D 四合一测试仪" />
+                <div class="device-reading">
+                  <span id="deviceMetric">血压</span>
+                  <strong id="deviceValue">128/82</strong>
+                  <small id="deviceUnit">mmHg</small>
+                </div>
+              </div>
+              <div class="device-meta">
+                <span>YS-916D</span>
+                <strong>血压 / 血糖 / 尿酸 / 血酮</strong>
+              </div>
+            </article>
+          </section>
+
+          <section class="vitals-grid" aria-label="最近指标">
+            <article class="vital-card" data-kind="bp">
+              <span>血压</span>
+              <strong id="latestBp">--</strong>
+              <small id="bpHint">等待记录</small>
+            </article>
+            <article class="vital-card" data-kind="glucose">
+              <span>血糖</span>
+              <strong id="latestGlucose">--</strong>
+              <small id="glucoseHint">等待记录</small>
+            </article>
+            <article class="vital-card" data-kind="uric">
+              <span>尿酸</span>
+              <strong id="latestUric">--</strong>
+              <small id="uricHint">等待记录</small>
+            </article>
+            <article class="vital-card" data-kind="ketone">
+              <span>血酮</span>
+              <strong id="latestKetone">--</strong>
+              <small id="ketoneHint">等待记录</small>
+            </article>
+          </section>
+
+          <section class="alert-band" id="alertBand" hidden>
+            <div>
+              <p class="eyebrow">需要立即关注</p>
+              <h2 id="alertTitle">指标异常</h2>
+              <p id="alertText"></p>
+            </div>
+            <button id="notifyNow" class="button danger" type="button">通知家人和医生</button>
+          </section>
+
+          <section class="care-map" aria-label="今日行动地图">
+            <article class="coach-panel doctor-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">家庭医生</p>
+                  <h2>下一步怎么做</h2>
+                </div>
+                <span id="memoryCount" class="count-pill">0 条长期记忆</span>
+              </div>
+              <div id="doctorList" class="advice-list"></div>
+            </article>
+
+            <article id="plan" class="coach-panel nutrition-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">营养师</p>
+                  <h2>今日饮食策略</h2>
+                </div>
+                <span id="plateMode" class="count-pill">均衡控糖</span>
+              </div>
+              <div class="plate">
+                <div class="plate-cell greens">
+                  <span>1/2</span>
+                  <strong>蔬菜</strong>
+                </div>
+                <div class="plate-cell protein">
+                  <span>1/4</span>
+                  <strong>优质蛋白</strong>
+                </div>
+                <div class="plate-cell carbs">
+                  <span>1/4</span>
+                  <strong>主食</strong>
+                </div>
+              </div>
+              <div id="nutritionList" class="advice-list compact"></div>
+            </article>
+          </section>
+
+          <section class="workspace-grid">
+            <form id="record" class="input-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">数据采集</p>
+                  <h2>新增一次监测</h2>
+                </div>
+                <button class="button ghost" id="simulateBtn" type="button">模拟设备同步</button>
+              </div>
+
+              <div class="segmented" role="tablist" aria-label="选择监测类型">
+                <button class="segment active" data-type="bp" type="button">血压</button>
+                <button class="segment" data-type="glucose" type="button">血糖</button>
+                <button class="segment" data-type="uric" type="button">尿酸</button>
+                <button class="segment" data-type="ketone" type="button">血酮</button>
+              </div>
+
+              <div class="form-grid" id="dynamicFields"></div>
+
+              <label class="field wide">
+                <span>场景备注</span>
+                <input id="noteInput" type="text" placeholder="晨起空腹、饭后2小时、睡前、饮食变化、运动后" />
+              </label>
+
+              <button class="button primary wide" type="submit">保存并更新 AI 建议</button>
+            </form>
+
+            <article class="trend-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">长期趋势</p>
+                  <h2>近 14 次记录</h2>
+                </div>
+                <select id="chartMetric" aria-label="选择趋势指标">
+                  <option value="bp">血压</option>
+                  <option value="glucose">血糖</option>
+                  <option value="uric">尿酸</option>
+                  <option value="ketone">血酮</option>
+                </select>
+              </div>
+              <canvas id="trendCanvas" width="720" height="260" aria-label="健康趋势图"></canvas>
+            </article>
+          </section>
+
+          <section class="bottom-grid">
+            <article class="history-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">长期记忆</p>
+                  <h2>健康档案</h2>
+                </div>
+                <button class="button ghost" id="clearDemo" type="button">重置演示</button>
+              </div>
+              <div id="historyList" class="history-list"></div>
+            </article>
+
+            <article id="family" class="family-panel">
+              <div class="section-head">
+                <div>
+                  <p class="eyebrow">家庭照护</p>
+                  <h2>异常联络</h2>
+                </div>
+                <span id="notifyStatus" class="count-pill">待命</span>
+              </div>
+              <div class="contact-list">
+                <div class="contact-row">
+                  <span>家人</span>
+                  <strong>王女士</strong>
+                  <small id="familyStatus">未触发</small>
+                </div>
+                <div class="contact-row">
+                  <span>医生</span>
+                  <strong>李医生</strong>
+                  <small id="doctorStatus">未触发</small>
+                </div>
+              </div>
+              <div class="safety-note">
+                本应用用于家庭记录、风险提醒和生活方式建议；诊断、治疗和用药调整需由专业医护人员决定。
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
